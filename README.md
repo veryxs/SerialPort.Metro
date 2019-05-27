@@ -7,4 +7,4 @@
 
 3、软件还有些BUG，自动发送无法使用。
 
-https://github.com/veryxs/SerialPort.Metro/blob/master/img/%E4%B8%B2%E5%8F%A3%E5%8A%A9%E6%89%8B.png
+img/串口助手.png
