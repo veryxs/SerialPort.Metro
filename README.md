@@ -7,5 +7,7 @@
 
 3、软件还有些BUG，自动发送无法使用。
 
- ![image](https://raw.githubusercontent.com/veryxs/SerialPort.Metro/master/img/%E4%B8%B2%E5%8F%A3%E5%8A%A9%E6%89%8B.png)
+![image](https://raw.githubusercontent.com/veryxs/SerialPort.Metro/master/img/%E9%A6%96%E9%A1%B5.png)
+
+![image](https://raw.githubusercontent.com/veryxs/SerialPort.Metro/master/img/%E4%B8%B2%E5%8F%A3%E5%8A%A9%E6%89%8B.png)
 
