@@ -71,10 +71,7 @@ namespace MotorController
                 AvailableComCbobox.SelectedValuePath = "com";//值路径
                 AvailableComCbobox.SelectedValue = ports[0];//默认选择第一个
 
-                AvailableComCbobox1.ItemsSource = comList;//资源路径
-                AvailableComCbobox1.DisplayMemberPath = "com";//显示路径
-                AvailableComCbobox1.SelectedValuePath = "com";//值路径
-                AvailableComCbobox1.SelectedValue = ports[0];//默认选择第一个
+
             }
             else
             {
@@ -180,8 +177,6 @@ namespace MotorController
             ComPort.ReadBufferSize = 1024;//数据读缓存
             ComPort.WriteBufferSize = 1024;//数据写缓存
             sendBtn.IsEnabled = false;//发送按钮初始化为不可用状态
-            startBtn.IsEnabled = false;//启动按钮初始化不可用
-            stopBtn.IsEnabled = false;//停止按钮初始化不可用
             sendModeCheck.IsChecked = false;//发送模式默认为未选中状态
             recModeCheck.IsChecked = false;//接收模式默认为未选中状态
             //↑↑↑↑↑↑↑↑↑默认设置↑↑↑↑↑↑↑↑↑
@@ -205,7 +200,7 @@ namespace MotorController
                 try//尝试打开串口
                 {
                     ComPort.PortName = AvailableComCbobox.SelectedValue.ToString();//设置要打开的串口
-                    ComPort.PortName = AvailableComCbobox1.SelectedValue.ToString();//设置要打开的串口
+
                     ComPort.BaudRate = Convert.ToInt32(RateListCbobox.SelectedValue);//设置当前波特率
                     ComPort.Parity = (Parity)Convert.ToInt32(ParityComCbobox.SelectedValue);//设置当前校验位
                     ComPort.DataBits = Convert.ToInt32(DataBitsCbobox.SelectedValue);//设置当前数据位
@@ -221,21 +216,17 @@ namespace MotorController
                 }
 
                 //成功打开串口后的设置
-                connectBtn.Content = "断开设备";
                 openBtn.Content = "关闭串口";//按钮显示改为“关闭按钮” 
                 ComPortIsOpen = true;//串口打开状态字改为true
                 WaitClose = false;//等待关闭串口状态改为false                
                 sendBtn.IsEnabled = true;//使能“发送数据”按钮
                 defaultSet.IsEnabled = false;//打开串口后失能重置功能
-                refreshBtn.IsEnabled = false;//打开串口后失能重置功能
                 AvailableComCbobox.IsEnabled = false;//失能可用串口控件
-                AvailableComCbobox1.IsEnabled = false;//失能可用串口控件
                 RateListCbobox.IsEnabled = false;//失能可用波特率控件
                 ParityComCbobox.IsEnabled = false;//失能可用校验位控件
                 DataBitsCbobox.IsEnabled = false;//失能可用数据位控件
                 StopBitsCbobox.IsEnabled = false;//失能可用停止位控件
-                startBtn.IsEnabled = true;//使能启动按钮
-                stopBtn.IsEnabled = true;
+
                                                
 
                 if (autoSendCheck.IsChecked == true)//如果打开前，自动发送控件就被选中，则打开串口后自动开始发送数据
@@ -445,20 +436,15 @@ namespace MotorController
 
         private void SetAfterClose()//成功关闭串口或串口丢失后的设置
         {
-            connectBtn.Content = "连接设备";
             openBtn.Content = "打开串口";//按钮显示为“打开串口”
             ComPortIsOpen = false;//串口状态设置为关闭状态
             sendBtn.IsEnabled = false;//失能发送数据按钮
             defaultSet.IsEnabled = true;//打开串口后使能重置功能
-            refreshBtn.IsEnabled = true;//打开串口后失能重置功能
             AvailableComCbobox.IsEnabled = true;//使能可用串口控件
-            AvailableComCbobox1.IsEnabled = true;//使能可用串口控件
             RateListCbobox.IsEnabled = true;//使能可用波特率下拉控件
             ParityComCbobox.IsEnabled = true;//使能可用校验位下拉控件
             DataBitsCbobox.IsEnabled = true;//使能数据位下拉控件
             StopBitsCbobox.IsEnabled = true;//使能停止位下拉控件
-            startBtn.IsEnabled = false;//失能启动按钮
-            stopBtn.IsEnabled = false;
         }
 
         private void SetComLose()//成功关闭串口或串口丢失后的设置
@@ -483,9 +469,7 @@ namespace MotorController
 
             comList.Clear();//情况控件链接资源
             AvailableComCbobox.DisplayMemberPath = "com1";
-            AvailableComCbobox1.DisplayMemberPath = "com1";
             AvailableComCbobox.SelectedValuePath = null;//路径都指为空，清空下拉控件显示，下面重新添加
-            AvailableComCbobox1.SelectedValuePath = null;//路径都指为空，清空下拉控件显示，下面重新添加
 
             ports = new string[SerialPort.GetPortNames().Length];//重新定义可用串口数组长度
             ports = SerialPort.GetPortNames();//获取可用串口
@@ -498,9 +482,7 @@ namespace MotorController
                 AvailableComCbobox.ItemsSource = comList;//可用串口下拉控件资源路径
                 AvailableComCbobox.DisplayMemberPath = "com";//可用串口下拉控件显示路径
                 AvailableComCbobox.SelectedValuePath = "com";//可用串口下拉控件值路径
-                AvailableComCbobox1.ItemsSource = comList;//可用串口下拉控件资源路径
-                AvailableComCbobox1.DisplayMemberPath = "com";//可用串口下拉控件显示路径
-                AvailableComCbobox1.SelectedValuePath = "com";//可用串口下拉控件值路径
+
             }
         }
 
@@ -574,94 +556,7 @@ namespace MotorController
             GetPort();
         }
 
-        private void StartBtn_Click(object sender, RoutedEventArgs e)
-        {
-            //string s = (plugDistance.Text - "45") * 360 * subdivisionNumber.Text / stepAngle.Text * 3 * diameter.Text);
-            byte[] sendBuffer = null;//发送数据缓冲区
-            string sendOrder = "{\"state\":"+"1"+
-                               ",\"zspace\":" + zSpace.Text +
-                               ",\"yspace\":" +ySpace.Text+
-                               ",\"motornumber\":"+motorNumber.Text+
-                               ",\"stepangle\":" + stepAngle.Text +
-                               ",\"subdivisionnumber\":" + subdivisionNumber.Text +
-                               ",\"diameter\":" + diameter.Text +
-                               ",\"plugrow\":" + plugRow.Text +
-                               ",\"plugdistance\":" + plugDistance.Text +
-                               ",\"potteddistance\":" + pottedDistance.Text +
-                               "}\r\n";
-            
-            sendBuffer = Encoding.UTF8.GetBytes(sendOrder);
-            try//尝试发送数据
-            {//如果发送字节数大于1000，则每1000字节发送一次
-                int sendTimes = (sendBuffer.Length / 1000);//发送次数
-                for (int i = 0; i < sendTimes; i++)//每次发生1000Bytes
-                {
-                    ComPort.Write(sendBuffer, i * 1000, 1000);//发送sendBuffer中从第i * 1000字节开始的1000Bytes
-                    sendCount.Text = (Convert.ToInt32(sendCount.Text) + 1000).ToString();//刷新发送字节数
-                }
-                if (sendBuffer.Length % 1000 != 0)
-                {
-                    ComPort.Write(sendBuffer, sendTimes * 1000, sendBuffer.Length % 1000);//发送字节小于1000Bytes或上面发送剩余的数据
-                    sendCount.Text = (Convert.ToInt32(sendCount.Text) + sendBuffer.Length % 1000).ToString();//刷新发送字节数
-                }
-            }
-            catch//如果无法发送，产生异常
-            {
-                if (ComPort.IsOpen == false)//如果ComPort.IsOpen == false，说明串口已丢失
-                {
-                    SetComLose();//串口丢失后相关设置
-                }
-                else
-                {
-                    MessageBox.Show("无法发送数据，原因未知！", "提示");
-                }
-            }
-
-        }
-
-        private void StopBtn_Click(object sender, RoutedEventArgs e)
-        {
-           
-           // MessageBox.Show("脉冲数"+s.ToString());
-            byte[] sendBuffer = null;//发送数据缓冲区
-            string sendOrder = "{\"state\":" + "0" +
-                               ",\"zspace\":" + 0 +
-                               ",\"yspace\":" + 0 +
-                               ",\"motornumber\":" + 0 +
-                               ",\"stepangle\":" + 0 +
-                               ",\"subdivisionnumber\":" + 0 +
-                               ",\"diameter\":" + 0 +
-                               ",\"plugdistance\":" + 0 +
-                               ",\"potteddistance\":" + 0 +
-                               "}\r\n";
-
-            sendBuffer = Encoding.UTF8.GetBytes(sendOrder);
-            try//尝试发送数据
-            {//如果发送字节数大于1000，则每1000字节发送一次
-                int sendTimes = (sendBuffer.Length / 1000);//发送次数
-                for (int i = 0; i < sendTimes; i++)//每次发生1000Bytes
-                {
-                    ComPort.Write(sendBuffer, i * 1000, 1000);//发送sendBuffer中从第i * 1000字节开始的1000Bytes
-                    sendCount.Text = (Convert.ToInt32(sendCount.Text) + 1000).ToString();//刷新发送字节数
-                }
-                if (sendBuffer.Length % 1000 != 0)
-                {
-                    ComPort.Write(sendBuffer, sendTimes * 1000, sendBuffer.Length % 1000);//发送字节小于1000Bytes或上面发送剩余的数据
-                    sendCount.Text = (Convert.ToInt32(sendCount.Text) + sendBuffer.Length % 1000).ToString();//刷新发送字节数
-                }
-            }
-            catch//如果无法发送，产生异常
-            {
-                if (ComPort.IsOpen == false)//如果ComPort.IsOpen == false，说明串口已丢失
-                {
-                    SetComLose();//串口丢失后相关设置
-                }
-                else
-                {
-                    MessageBox.Show("无法发送数据，原因未知！", "提示");
-                }
-            }
-        }
+ 
 
         private void tb_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
